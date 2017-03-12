@@ -36,6 +36,14 @@ module OmniAuth
       def raw_info
         @raw_info ||= access_token.post('users/get_current_account', body: nil.to_json).parsed
       end
+
+      def callback_url
+        # Override to remove query_string. Dropbox will verify that the
+        # redirect_uri provided in the token request matches the one used for
+        # the authorize request, and using the query string will cause
+        # redirect_uri mismatch errors.
+        full_host + script_name + callback_path
+      end
     end
   end
 end
